@@ -1,0 +1,18 @@
+[tool.poetry]
+name = "ai-router-sdk"
+version = "0.0.1"
+description = "ai router sdk to use router and privacy mode"
+authors = ["Your Name <you@example.com>"]
+readme = "README.md"
+
+[tool.poetry.dependencies]
+python = ">=3.11,<3.13"
+openai = "^1.57.0"
+fastembed = "^0.4.2"
+
+[tool.poetry.group.dev.dependencies]
+pytest = "^8.3.4"
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"

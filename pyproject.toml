@@ -1,17 +1,23 @@
 [tool.poetry]
-name = "ai-router-sdk"
+name = "airouter-sdk"
 version = "0.0.1"
-description = "ai router sdk to use router and privacy mode"
-authors = ["Your Name <you@example.com>"]
+description = "Official Python SDK for airouter.io - Automatically route requests to the best Large Language Model (LLM)."
+authors = ["Kai Wendlandt <kai@airouter.io>", "Matthias Lau <matthias@airouter.io>"]
 readme = "README.md"
+packages = [{include = "airouter"}]
 
 [tool.poetry.dependencies]
 python = ">=3.11,<3.13"
 openai = "^1.57.0"
-fastembed = "^0.4.2"
+fastembed = { version = "^0.4.2", optional = true }
+
+[tool.poetry.extras]
+privacy = ["fastembed"]
 
 [tool.poetry.group.dev.dependencies]
 pytest = "^8.3.4"
+requests = "*"
+filelock = "*"
 
 [build-system]
 requires = ["poetry-core"]

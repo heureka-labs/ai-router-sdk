@@ -1,5 +1,4 @@
 from enum import Enum
-from typing import Dict, ClassVar
 
 
 class Model(Enum):
@@ -16,15 +15,22 @@ class Model(Enum):
     GEMINI_15_FLASH = 'gemini-1.5-flash-001'
     GEMINI_15_PRO = 'gemini-1.5-pro-001'
     QWEN25_72B = 'qwen2.5-72B'
+    UNKNOWN = 'unknown'
 
-    _value_map: ClassVar[Dict[str, 'Model']] = {}
+    def __init__(self):
+        self._original_value = None
 
     @classmethod
-    def get(cls, value: str) -> 'Model':
-        """Convert a model string value to its corresponding Model enum."""
-        if not cls._value_map:
-            cls._value_map = {model.value: model for model in cls}
-        try:
-            return cls._value_map[value]
-        except KeyError:
-            raise ValueError(f'Unknown model: {value}')
+    def from_string(cls, value: str) -> 'Model':
+        model = cls._value_map.get(value, cls.UNKNOWN)
+        if model == cls.UNKNOWN:
+            model._original_value = value
+        return model
+
+    def to_string(self):
+        if self._original_value:
+            return self._original_value
+        return self.value
+
+
+Model._value_map = {m.value: m for m in Model.__members__.values()}

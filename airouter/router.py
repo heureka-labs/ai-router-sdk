@@ -53,7 +53,7 @@ class AiRouter(OpenAI):
                 **kwargs,
             )
 
-        return Model.get(response.choices[0].message.content)
+        return Model.from_string(response.choices[0].message.content)
 
     def _generate_embeddings(self, messages: Iterable[ChatCompletionMessageParam]) -> list[float]:
         # ensure privacy extra is installed

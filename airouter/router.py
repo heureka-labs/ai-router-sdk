@@ -13,6 +13,8 @@ EMBEDDING_MODEL_NAME = "sentence-transformers/paraphrase-multilingual-mpnet-base
 
 
 class AiRouter(OpenAI):
+    chat: AiRouterChat
+
     def __init__(self, **kwargs):
         # adjust the base url to the airouter
         kwargs['base_url'] = os.getenv(AI_ROUTER_BASE_URL_ENV_VAR_NAME, AI_ROUTER_BASE_URL)

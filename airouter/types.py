@@ -17,7 +17,7 @@ class Model(Enum):
     QWEN25_72B = 'qwen2.5-72B'
     UNKNOWN = 'unknown'
 
-    def __init__(self):
+    def __init__(self, value):
         self._original_value = None
 
     @classmethod

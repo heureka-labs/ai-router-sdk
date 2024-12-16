@@ -11,6 +11,8 @@ AI_ROUTER_BASE_URL_ENV_VAR_NAME = "AIROUTER_HOST"
 AI_ROUTER_BASE_URL = "https://api.airouter.io"
 EMBEDDING_MODEL_NAME = "sentence-transformers/paraphrase-multilingual-mpnet-base-v2"
 
+os.environ["TOKENIZERS_PARALLELISM"] = "true"
+
 
 class AiRouter(OpenAI):
     chat: AiRouterChat
@@ -42,12 +44,14 @@ class AiRouter(OpenAI):
             # generate embeddings locally to avoid sending the messages to the airouter
             embeddings = self._generate_embeddings(messages)
 
+            kwargs['extra_body'] = {
+                **(kwargs.get('extra_body', {})),
+                'embedding': embeddings
+            }
+
             response = self.chat.completions.create(
                 messages=None,
                 **kwargs,
-                extra_body={
-                    'embedding': embeddings
-                }
             )
         else:
             response = self.chat.completions.create(

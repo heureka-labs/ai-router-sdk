@@ -18,19 +18,27 @@ class Model(Enum):
     UNKNOWN = 'unknown'
 
     def __init__(self, value):
+        super().__init__()
         self._original_value = None
 
     @classmethod
+    def _get_value_map(cls):
+        # Create value map only if needed and cache it
+        if not hasattr(cls, '_value_map'):
+            cls._value_map = {m.value: m for m in cls.__members__.values()}
+        return cls._value_map
+
+    @classmethod
     def from_string(cls, value: str) -> 'Model':
-        model = cls._value_map.get(value, cls.UNKNOWN)
+        value_map = cls._get_value_map()
+        model = value_map.get(value, cls.UNKNOWN)
         if model == cls.UNKNOWN:
+            # Create a new instance for unknown models to store the original value
+            model = cls.UNKNOWN
             model._original_value = value
         return model
 
     def to_string(self):
-        if self._original_value:
+        if self._original_value is not None:
             return self._original_value
         return self.value
-
-
-Model._value_map = {m.value: m for m in Model.__members__.values()}

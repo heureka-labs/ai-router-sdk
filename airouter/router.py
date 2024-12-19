@@ -64,8 +64,8 @@ class AiRouter(OpenAI):
     def _generate_embeddings(self, messages: Iterable[ChatCompletionMessageParam]) -> list[float]:
         # ensure privacy extra is installed
         try:
-            from fastembed import TextEmbedding
             if not self.embedder:
+                from fastembed import TextEmbedding
                 self.embedder = TextEmbedding(
                     model_name=EMBEDDING_MODEL_NAME
                 )

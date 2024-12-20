@@ -1,0 +1,24 @@
+[tool.poetry]
+name = "airouter-sdk"
+version = "0.1.0"
+description = "Official Python SDK for airouter.io - Automatically route requests to the best Large Language Model (LLM)."
+authors = ["Kai Wendlandt <kai@airouter.io>", "Matthias Lau <matthias@airouter.io>"]
+readme = "README.md"
+packages = [{include = "airouter"}]
+
+[tool.poetry.dependencies]
+python = ">=3.11,<3.13"
+openai = "^1.57.0"
+fastembed = { version = "^0.4.2", optional = true }
+
+[tool.poetry.extras]
+privacy = ["fastembed"]
+
+[tool.poetry.group.dev.dependencies]
+pytest = "^8.3.4"
+requests = "*"
+filelock = "*"
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"

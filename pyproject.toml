@@ -2,9 +2,11 @@
 name = "airouter-sdk"
 version = "0.1.0"
 description = "Official Python SDK for airouter.io - Automatically route requests to the best Large Language Model (LLM)."
-authors = ["Kai Wendlandt <kai@airouter.io>", "Matthias Lau <matthias@airouter.io>"]
+authors = []
+license = "MIT"
 readme = "README.md"
 packages = [{include = "airouter"}]
+repository = "https://github.com/heureka-labs/ai-router-sdk"
 
 [tool.poetry.dependencies]
 python = ">=3.11,<3.13"

@@ -8,6 +8,8 @@ class Model(Enum):
     LLAMA_31_8B = 'llama-3.1-8b'
     LLAMA_31_70B = 'llama-3.1-70b'
     LLAMA_31_405B = 'llama-3.1-405b'
+    LLAMA_33_70B = 'llama-3.3-70b'
+    LLAMA_33_70B_FAST = 'llama-3.3-70b-fast'
     CLAUDE_3_HAIKU = 'claude-3-haiku'
     CLAUDE_3_OPUS = 'claude-3-opus'
     CLAUDE_35_SONNET = 'claude-3-5-sonnet'
@@ -15,6 +17,8 @@ class Model(Enum):
     GEMINI_15_FLASH = 'gemini-1.5-flash'
     GEMINI_15_PRO = 'gemini-1.5-pro'
     QWEN25_72B = 'qwen2.5-72B'
+    DEEPSEEK_V3 = 'deepseek-v3'
+    PHI_4 = 'phi-4'
     UNKNOWN = 'unknown'
 
     def __init__(self, value):

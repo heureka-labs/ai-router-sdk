@@ -46,3 +46,8 @@ class Model(Enum):
         if self._original_value is not None:
             return self._original_value
         return self.value
+
+
+class EmbeddingType(Enum):
+    TEXT_EMBEDDING_3_SMALL = 'text-embedding-3-small'
+    PARAPHRASE_MULTILINGUAL_MPNET_BASE_V2 = 'paraphrase-multilingual-mpnet-base-v2'

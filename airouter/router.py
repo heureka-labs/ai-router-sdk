@@ -4,7 +4,7 @@ from openai import OpenAI, OpenAIError
 from openai.types.chat import ChatCompletionMessageParam
 
 from airouter.chat import AiRouterChat
-from airouter.types import Model
+from airouter.types import EmbeddingType, Model
 
 AI_ROUTER_API_KEY_ENV_VAR_NAME = "AIROUTER_API_KEY"
 AI_ROUTER_BASE_URL_ENV_VAR_NAME = "AIROUTER_HOST"
@@ -37,10 +37,28 @@ class AiRouter(OpenAI):
 
     def get_best_model(
         self,
-        messages: Iterable[ChatCompletionMessageParam],
+        messages: Iterable[ChatCompletionMessageParam] = None,
         full_privacy: bool = False,
+        embedding: list[float] = None,
+        embedding_type: EmbeddingType = None,
         **kwargs,
     ) -> Model:
+        """
+        Get the best model for the given messages.
+
+        :param messages: The messages to identify the best model for.
+        :param full_privacy: Whether to use full privacy mode where an embedding is used instead of messages.
+        :param embedding: The embedding to use.
+        :param embedding_type: The embedding type of the embedding.
+        :param kwargs: Additional arguments for the generation.
+        :return: The best model for the given messages.
+        """
+        self._validate_inputs(messages, embedding, embedding_type)
+
+        # explicitly set full privacy if an embedding is provided
+        if embedding:
+            full_privacy = True
+
         # deactivate model routing to directly receive the best model
         kwargs["extra_body"] = {
             "model_routing": False,
@@ -51,27 +69,46 @@ class AiRouter(OpenAI):
         kwargs["model"] = kwargs.get("model", "auto")
 
         if full_privacy:
-            # generate embeddings locally to avoid sending the messages to the airouter
-            embeddings = self._generate_embeddings(messages)
+            if not embedding:
+                # generate embedding locally to avoid sending the messages to the airouter
+                embedding = self._generate_embedding(messages)
+                embedding_type = EmbeddingType.PARAPHRASE_MULTILINGUAL_MPNET_BASE_V2
 
             kwargs["extra_body"] = {
                 **(kwargs.get("extra_body", {})),
-                "embedding": embeddings,
+                "embedding": embedding,
+                "embedding_type": embedding_type.value,
             }
+            messages = None
 
-            response = self.chat.completions.create(
-                messages=None,
-                **kwargs,
-            )
-        else:
-            response = self.chat.completions.create(
-                messages=messages,
-                **kwargs,
-            )
+        response = self.chat.completions.create(
+            messages=messages,
+            **kwargs,
+        )
 
         return Model.from_string(response.choices[0].message.content)
 
-    def _generate_embeddings(
+    def _validate_inputs(
+        self,
+        messages: Iterable[ChatCompletionMessageParam] | None,
+        embedding: list[float] | None,
+        embedding_type: EmbeddingType | None,
+    ) -> None:
+        """
+        Validate the inputs for model selection.
+
+        :param messages: The messages to validate.
+        :param embedding: The embedding to validate.
+        :param embedding_type: The embedding type to validate.
+        :raises ValueError: If the validation fails.
+        """
+        if (messages is None and embedding is None) or (messages is not None and embedding is not None):
+            raise ValueError("Either messages or embedding must be provided, but not both")
+
+        if embedding is not None and embedding_type is None:
+            raise ValueError("embedding_type must be provided when using explicit embedding")
+
+    def _generate_embedding(
         self, messages: Iterable[ChatCompletionMessageParam]
     ) -> list[float]:
         # ensure privacy extra is installed

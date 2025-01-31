@@ -98,8 +98,6 @@ This is particularly useful when working with private models or when you need to
 You can also limit the models, for example to create a simple switch between gpt-4o-mini and gpt-4o:
 
 ```python
-from airouter import AiRouter, Model
-
 model_name = airouter.get_best_model(
     messages=[
         {"role": "user", "content": "Hello, world!"}
@@ -132,6 +130,30 @@ This mode:
 - Only sends embeddings to AI Router
 - Protects sensitive message content
 - Requires the privacy dependencies: `pip install "airouter_sdk[privacy]"`
+
+If you want to use existing `text-embedding-3-small` embeddings, you can do so by handing in these embeddings and setting the embedding type:
+
+```python
+# generate openai embeddings
+messages = [
+    {"role": "user", "content": "Hello, world!"}
+]
+input = " ".join(message['content'] for message in messages)
+input = messages_query.replace("\n", " ")
+embedding = openai_client.embeddings.create(
+    model="text-embedding-3-small",
+    input=input,
+    dimensions=1536
+)
+
+# Use privacy mode for sensitive content with existing openai embeddings
+model_name = airouter.get_best_model(
+    full_privacy=True,
+    embedding=embedding,
+    embedding_type=EmbeddingType.TEXT_EMBEDDING_3_SMALL,
+)
+print(model_name)
+```
 
 ## Testing
 

@@ -95,19 +95,19 @@ print(model_name)  # Returns the recommended model identifier
 
 This is particularly useful when working with private models or when you need to handle the model calling logic yourself.
 
-You can also limit the models, for example to create a simple switch between gpt-4o-mini and gpt-4o:
+You can also limit the models, for example to create a simple switch between gpt-5-mini and gpt-5:
 
 ```python
 model_name = airouter.get_best_model(
     messages=[
         {"role": "user", "content": "Hello, world!"}
     ],
-    models=[Model.GPT_4O_MINI, Model.GPT_4O]
+    models=[Model.GPT_5_MINI, Model.GPT_5]
 )
-if model_name == Model.GPT_4O_MINI:
-    # call your private gpt-4o-mini endpoint
+if model_name == Model.GPT_5_MINI:
+    # call your private gpt-5-mini endpoint
 else:
-    # call your private gpt-4o endpoint
+    # call your private gpt-5 endpoint
 ```
 
 ### Privacy Features
